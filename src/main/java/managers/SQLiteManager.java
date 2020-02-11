@@ -9,8 +9,7 @@ import java.sql.*;
 import java.util.List;
 
 public class SQLiteManager {
-    private Connection assetConnection;
-    private Connection locationConnection;
+    private Connection memoryDatabaseConnection;
 
     private static SQLiteManager instance = null;
 
@@ -21,29 +20,16 @@ public class SQLiteManager {
             System.err.println(e.getMessage());
         }
 
-        assetConnection = connectToAssetDB();
+        memoryDatabaseConnection = connect();
         generateDeviceTable();
-        locationConnection = connectToLocationDB();
         generateLocationTable();
     }
 
-    private Connection connectToAssetDB() {
-        String dbString = "jdbc:sqlite::memory:";
-
-        return connect(dbString);
-    }
-
-    private Connection connectToLocationDB() {
-        String dbString = "jdbc:sqlite::memory:";
-
-        return connect(dbString);
-    }
-
-    private Connection connect(String dbString) {
+    private Connection connect() {
         Connection conn = null;
 
         try {
-            conn = DriverManager.getConnection(dbString);
+            conn = DriverManager.getConnection("jdbc:sqlite::memory:");
             if (conn == null) {
                 throw new SQLException();
             }
@@ -56,22 +42,22 @@ public class SQLiteManager {
     }
 
     private void generateDeviceTable() {
-        try (Statement statement = assetConnection.createStatement()) {
+        try (Statement statement = memoryDatabaseConnection.createStatement()) {
             statement.executeUpdate("drop table if exists DEVICES");
             statement.executeUpdate("create table DEVICES(barcode TEXT, asset INTEGER NOT NULL, serial TEXT, " +
                     "purchase_date TEXT, description TEXT, po_number TEXT, primary key (asset))");
-            assetConnection.commit();
+            memoryDatabaseConnection.commit();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
 
     private void generateLocationTable() {
-        try (Statement statement = locationConnection.createStatement()) {
+        try (Statement statement = memoryDatabaseConnection.createStatement()) {
             statement.executeUpdate("drop table if exists LOCATIONS");
             statement.executeUpdate("create table LOCATIONS(location_code TEXT, location_name TEXT, " +
                     "primary key (location_code))");
-            locationConnection.commit();
+            memoryDatabaseConnection.commit();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
@@ -85,13 +71,14 @@ public class SQLiteManager {
         return select("serial", serial.trim());
     }
 
+    @SuppressWarnings("SqlResolve")
     private CachedRowSet select(String selector, @NotNull String value) {
         String sql = "select * from DEVICES where " + selector + " = '" + value + "'";
         ResultSet resultSet;
 
         CachedRowSet cachedRowSet = null;
 
-        try (Statement statement = assetConnection.createStatement()){
+        try (Statement statement = memoryDatabaseConnection.createStatement()){
             RowSetFactory factory = RowSetProvider.newFactory();
             cachedRowSet = factory.createCachedRowSet();
             resultSet = statement.executeQuery(sql);
@@ -113,7 +100,7 @@ public class SQLiteManager {
 
         String sql = "select location_name from LOCATIONS where location_code = '" + code.trim() + "'";
 
-        try (Statement statement = locationConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+        try (Statement statement = memoryDatabaseConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY,
                 ResultSet.CONCUR_READ_ONLY,
                 ResultSet.CLOSE_CURSORS_AT_COMMIT);
              ResultSet resultSet = statement.executeQuery(sql)){
@@ -129,22 +116,23 @@ public class SQLiteManager {
     @SuppressWarnings("SqlResolve")
     public void loadLocationsToMemory(@NotNull List<List<String>> locationCSV) {
         try {
-            PreparedStatement statement = locationConnection.prepareStatement(
+            PreparedStatement statement = memoryDatabaseConnection.prepareStatement(
                     "insert into LOCATIONS (location_code, location_name) values (?,?)");
             for (List<String> item : locationCSV) {
                 statement.setString(1, item.get(0));
                 statement.setString(2, item.get(1));
                 statement.executeUpdate();
             }
-            locationConnection.commit();
+            memoryDatabaseConnection.commit();
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }
     }
 
+    @SuppressWarnings("SqlResolve")
     public void loadAssetsToDB(@NotNull List<List<String>> assetList) {
         try {
-            PreparedStatement statement = assetConnection.prepareStatement(
+            PreparedStatement statement = memoryDatabaseConnection.prepareStatement(
                     "insert or replace into DEVICES(barcode, asset, serial, purchase_date, description, po_number) " +
                             "values (?,?,?,?,?,?)");
 
@@ -158,7 +146,19 @@ public class SQLiteManager {
 
                 statement.executeUpdate();
             }
-            assetConnection.commit();
+            memoryDatabaseConnection.commit();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+        }
+    }
+
+    @SuppressWarnings("SqlResolve")
+    private void debugDB() {
+        try (Statement statement = memoryDatabaseConnection.createStatement(ResultSet.TYPE_FORWARD_ONLY,
+                ResultSet.CONCUR_READ_ONLY,
+                ResultSet.CLOSE_CURSORS_AT_COMMIT);
+             ResultSet resultSet = statement.executeQuery("select asset, serial, description from DEVICES where barcode = '200649'")){
+            System.out.println(resultSet.getString("description"));
         } catch (SQLException e) {
             System.err.println(e.getMessage());
         }

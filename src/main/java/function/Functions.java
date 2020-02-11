@@ -65,13 +65,17 @@ public class Functions {
     }
 
     private static CachedRowSet generateCachedRow() {
-        if (selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()].equals("barcode")) {
-            return SQLiteManager.getInstance()
+        CachedRowSet cachedRowSet;
+
+        if (selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()].toLowerCase().equals("barcode")) {
+            cachedRowSet =  SQLiteManager.getInstance()
                     .selectByBarcode(selectionStrings[Enums.SelectionIndex.BAR_SERIAL_TEXT.getValue()]);
         }
         else {
-            return SQLiteManager.getInstance()
+            cachedRowSet =  SQLiteManager.getInstance()
                     .selectBySerial(selectionStrings[Enums.SelectionIndex.BAR_SERIAL_TEXT.getValue()]);
         }
+
+        return cachedRowSet;
     }
 }
