@@ -1,5 +1,6 @@
 package layout;
 
+import function.Enums;
 import function.Functions;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,25 +14,6 @@ import static function.Functions.selectionStrings;
 
 public class MainForm {
     private static JTextPane bigPane;
-
-    private enum SelectionIndex {
-        BAR_SERIAL_COMBO(0),
-        BAR_SERIAL_TEXT(1),
-        LOCATION_CODE(2),
-        DEVICE_TYPE(3),
-        TECH_NOTE(4),
-        REQUESTING(5);
-
-        private int value;
-
-        SelectionIndex(int value) {
-            this.value = value;
-        }
-
-        public int getValue() {
-            return value;
-        }
-    }
 
     private static void addComponentsToPane(@NotNull Container pane) {
         pane.setLayout(null);
@@ -47,10 +29,10 @@ public class MainForm {
     @SuppressWarnings("unchecked")
     private static void createComboBox(@NotNull Container pane, @NotNull Insets insets) {
         String[] combo = { "Barcode", "Serial" };
-        selectionStrings[SelectionIndex.BAR_SERIAL_COMBO.getValue()] = "Barcode";
+        selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()] = "Barcode";
         JComboBox<String> barSerialBox = new JComboBox<>(combo);
         barSerialBox.addActionListener(e ->
-                selectionStrings[SelectionIndex.BAR_SERIAL_COMBO.getValue()] = (String)((JComboBox<String>)e.getSource())
+                selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()] = (String)((JComboBox<String>)e.getSource())
                 .getSelectedItem());
 
         pane.add(barSerialBox);
@@ -98,7 +80,7 @@ public class MainForm {
 
             @Override
             public void focusLost(FocusEvent e) {
-                selectionStrings[SelectionIndex.BAR_SERIAL_TEXT.getValue()] = barSerial.getText();
+                selectionStrings[Enums.SelectionIndex.BAR_SERIAL_TEXT.getValue()] = barSerial.getText();
             }
         });
 
@@ -111,7 +93,7 @@ public class MainForm {
 
             @Override
             public void focusLost(FocusEvent e) {
-                selectionStrings[SelectionIndex.LOCATION_CODE.getValue()] = locCode.getText();
+                selectionStrings[Enums.SelectionIndex.LOCATION_CODE.getValue()] = locCode.getText();
             }
         });
 
@@ -124,7 +106,7 @@ public class MainForm {
 
             @Override
             public void focusLost(FocusEvent e) {
-                selectionStrings[SelectionIndex.DEVICE_TYPE.getValue()] = type.getText();
+                selectionStrings[Enums.SelectionIndex.DEVICE_TYPE.getValue()] = type.getText();
             }
         });
 
@@ -137,7 +119,7 @@ public class MainForm {
 
             @Override
             public void focusLost(FocusEvent e) {
-                selectionStrings[SelectionIndex.TECH_NOTE.getValue()] = techNote.getText();
+                selectionStrings[Enums.SelectionIndex.TECH_NOTE.getValue()] = techNote.getText();
             }
         });
 
@@ -150,7 +132,7 @@ public class MainForm {
 
             @Override
             public void focusLost(FocusEvent e) {
-                selectionStrings[SelectionIndex.REQUESTING.getValue()] = requesting.getText();
+                selectionStrings[Enums.SelectionIndex.REQUESTING.getValue()] = requesting.getText();
             }
         });
 
