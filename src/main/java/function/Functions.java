@@ -1,6 +1,7 @@
 package function;
 
 import managers.SQLiteManager;
+import managers.SettingsManager;
 import org.jetbrains.annotations.NotNull;
 
 import javax.sql.rowset.CachedRowSet;
@@ -15,6 +16,10 @@ public class Functions {
     public static String[] selectionStrings = new String[] { null, null, null, null, null, null };
 
     private static void copyTextToClipboard(String paneString) {
+        if (SettingsManager.noclipboard) {
+            return;
+        }
+
         StringSelection stringSelection = new StringSelection(paneString);
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
         clipboard.setContents(stringSelection, null);

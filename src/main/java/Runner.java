@@ -2,6 +2,7 @@ import layout.CLIForm;
 import layout.MainForm;
 import managers.CSVManager;
 import managers.SQLiteManager;
+import managers.SettingsManager;
 import threads.ThreadManager;
 
 import java.io.File;
@@ -10,19 +11,14 @@ import java.util.List;
 import java.util.Objects;
 
 public class Runner {
-    private static int threadsRequested = 1;
 
     public static void main(String[] args) {
         init();
 
         List<String> argList = Arrays.asList(args);
+        SettingsManager.parseArgs(argList);
 
-        argList.stream()
-                .filter(arg -> arg.contains("threads"))
-                .findFirst()
-                .ifPresent(threadArg -> threadsRequested = Integer.parseInt(threadArg.split("=")[1]));
-
-        if (argList.contains("nogui")) {
+        if (SettingsManager.nogui) {
             System.out.println("CLI requested...");
             CLIForm.nogui();
         } else {
@@ -50,7 +46,7 @@ public class Runner {
         List<String> assetCSVFiles =
                 Arrays.asList(Objects.requireNonNull(assets.list((dir, name) -> name.toLowerCase().endsWith(".csv"))));
 
-        List<List<String>> results = ThreadManager.getInstance().readAssetCSVThreaded(assetCSVFiles, threadsRequested);
+        List<List<String>> results = ThreadManager.getInstance().readAssetCSVThreaded(assetCSVFiles, SettingsManager.numThreadsRequested);
 
         SQLiteManager.getInstance().loadAssetsToDB(results);
 
