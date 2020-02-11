@@ -84,7 +84,12 @@ public class MainForm {
     }
 
     private static void createTextBoxes(@NotNull Container pane, @NotNull Insets insets) {
-        JTextField barSerial = new JTextField();
+        JTextField barSerial = new JTextField() {
+            public void addNotify() {
+                super.addNotify();
+                requestFocus();
+            }
+        };
         barSerial.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {

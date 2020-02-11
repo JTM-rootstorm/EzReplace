@@ -166,7 +166,11 @@ public class SQLiteManager {
 
     public static SQLiteManager getInstance() {
         if (instance == null) {
-            instance = new SQLiteManager();
+            synchronized (SQLiteManager.class) {
+                if (instance == null) {
+                    instance = new SQLiteManager();
+                }
+            }
         }
 
         return instance;

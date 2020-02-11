@@ -11,8 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public class CSVManager {
-    private List<List<String>> csvData = new ArrayList<>();
-
     private static CSVManager instance;
 
     private CSVManager() {
@@ -21,24 +19,24 @@ public class CSVManager {
 
     public static CSVManager getInstance() {
         if (instance == null) {
-            instance = new CSVManager();
+            synchronized (CSVManager.class) {
+                if (instance == null) {
+                    instance = new CSVManager();
+                }
+            }
         }
 
         return instance;
     }
 
-    public void readLocationCSV() {
-        clearCsvList();
-
+    public List<List<String>> readLocationCSV() {
         String path = System.getProperty("user.dir") + "\\locationcodes.csv";
 
-        csvData = readCSV(path);
+        return readCSV(path);
     }
 
-    public void readAssetCSV(@NotNull List<String> filenames) {
-        clearCsvList();
-
-        String path;
+    public List<List<String>> readAssetCSV(@NotNull List<String> filenames) {
+         String path;
 
         List<List<String>> tempData = new ArrayList<>();
 
@@ -47,7 +45,7 @@ public class CSVManager {
             tempData.addAll(trimData(readCSV(path)));
         }
 
-        csvData = tempData;
+        return tempData;
     }
 
     @NotNull
@@ -85,15 +83,5 @@ public class CSVManager {
         }
 
         return tempData;
-    }
-
-    private void clearCsvList() {
-        if (!csvData.isEmpty()) {
-            csvData.clear();
-        }
-    }
-
-    public List<List<String>> getCsvData() {
-        return csvData;
     }
 }

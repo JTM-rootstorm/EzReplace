@@ -5,6 +5,7 @@ import managers.SQLiteManager;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public class Runner {
@@ -12,8 +13,7 @@ public class Runner {
         init();
 
         if (Arrays.asList(args).contains("nogui")) {
-            System.out.println("No GUI requested...");
-            //CLIForm.nogui();
+            System.out.println("CLI requested...");
             CLIForm.nogui();
         } else {
             MainForm.createAndShowGUI();
@@ -28,8 +28,7 @@ public class Runner {
     private static void readLocationsToMemory() {
         System.out.print("Reading locations to memory...");
 
-        CSVManager.getInstance().readLocationCSV();
-        SQLiteManager.getInstance().loadLocationsToMemory(CSVManager.getInstance().getCsvData());
+        SQLiteManager.getInstance().loadLocationsToMemory(CSVManager.getInstance().readLocationCSV());
 
         System.out.println("Done");
     }
@@ -38,11 +37,10 @@ public class Runner {
         System.out.print("Reading asset CSVs to memory...");
 
         File assets = new File(System.getProperty("user.dir") + "\\asset-csv\\");
-        java.util.List<String> assetCSVFiles =
+        List<String> assetCSVFiles =
                 Arrays.asList(Objects.requireNonNull(assets.list((dir, name) -> name.toLowerCase().endsWith(".csv"))));
 
-        CSVManager.getInstance().readAssetCSV(assetCSVFiles);
-        SQLiteManager.getInstance().loadAssetsToDB(CSVManager.getInstance().getCsvData());
+        SQLiteManager.getInstance().loadAssetsToDB(CSVManager.getInstance().readAssetCSV(assetCSVFiles));
 
         System.out.println("Done");
     }
