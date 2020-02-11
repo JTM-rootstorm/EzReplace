@@ -1,0 +1,32 @@
+plugins {
+    id 'java'
+}
+
+group 'org.example'
+version '2.0.3.2'
+
+sourceCompatibility = "1.8"
+
+jar {
+    manifest {
+        attributes 'Main-Class': 'Runner'
+    }
+
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+artifacts {
+    archives jar
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.1'
+    implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
+    implementation 'org.jetbrains:annotations:18.0.0'
+}

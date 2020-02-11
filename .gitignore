@@ -1,0 +1,9 @@
+/asset-csv/
+/jar/
+/.idea/
+/gradle/
+/build/
+/.gradle/
+/gradlew.bat
+/locationcodes.csv
+/gradlew
