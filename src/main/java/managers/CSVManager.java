@@ -4,6 +4,7 @@ import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -30,7 +31,7 @@ public class CSVManager {
     }
 
     public List<List<String>> readLocationCSV() {
-        String path = System.getProperty("user.dir") + "\\locationcodes.csv";
+        String path = System.getProperty("user.dir") + File.separator + "locationcodes.csv";
 
         return readCSV(path);
     }
@@ -41,7 +42,7 @@ public class CSVManager {
         List<List<String>> tempData = new ArrayList<>();
 
         for (String filename : filenames) {
-            path = System.getProperty("user.dir") + "\\asset-csv\\" + filename;
+            path = System.getProperty("user.dir") + File.separator + "asset-csv" + File.separator + filename;
             tempData.addAll(trimData(readCSV(path)));
         }
 
