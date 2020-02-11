@@ -46,7 +46,7 @@ public class Runner {
     private static void readAssetsToMemory() {
         System.out.print("Reading asset CSVs to memory...");
 
-        File assets = new File(System.getProperty("user.dir") + "\\asset-csv\\");
+        File assets = new File(System.getProperty("user.dir") + File.separator + "asset-csv" + File.separator);
         List<String> assetCSVFiles =
                 Arrays.asList(Objects.requireNonNull(assets.list((dir, name) -> name.toLowerCase().endsWith(".csv"))));
 
