@@ -1,23 +1,23 @@
 package threads;
 
-import java.util.ArrayList;
+import managers.CSVManager;
+
 import java.util.List;
 
-class ManagedCSVThread extends ManagedThread {
+class ManagedCSVThread extends ManagedThread<List<List<String>>>{
     private List<String> csvToRead;
-    private List<List<String>> csvData;
 
-    ManagedCSVThread(String id) {
+    ManagedCSVThread(String id, List<String> workload) {
         super(id);
-        csvToRead = new ArrayList<>();
+        csvToRead = workload;
+    }
+
+    public List<List<String>> run() {
+        return CSVManager.getInstance().readAssetCSV(csvToRead);
     }
 
     @Override
-    public void run() {
-
-    }
-
-    public List<List<String>> getCSVData() {
-        return csvData;
+    public List<List<String>> call() {
+        return run();
     }
 }
