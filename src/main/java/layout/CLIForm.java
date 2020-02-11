@@ -25,8 +25,13 @@ public class CLIForm {
     }
 
     private static void getUserInput() {
-        System.out.print("Barcode or Serial?: ");
-        Functions.selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()] = queryInput().toLowerCase();
+        System.out.print("[B]arcode or [S]erial?: ");
+        String choice = queryInput();
+        if (choice.toLowerCase().equals("b") || choice.toLowerCase().equals("barcode")) {
+            Functions.selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()] = "barcode";
+        } else {
+            Functions.selectionStrings[Enums.SelectionIndex.BAR_SERIAL_COMBO.getValue()] = "serial";
+        }
 
         System.out.print("\nEnter barcode/serial: ");
         Functions.selectionStrings[Enums.SelectionIndex.BAR_SERIAL_TEXT.getValue()] = queryInput();
