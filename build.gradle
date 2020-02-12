@@ -45,4 +45,5 @@ dependencies {
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.1'
     implementation group: 'org.xerial', name: 'sqlite-jdbc', version: '3.7.2'
     implementation 'org.jetbrains:annotations:18.0.0'
+    implementation 'commons-net:commons-net:3.6'
 }
