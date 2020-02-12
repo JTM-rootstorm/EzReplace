@@ -1,6 +1,7 @@
 import layout.CLIForm;
 import layout.MainForm;
 import managers.CSVManager;
+import managers.FTPManager;
 import managers.SQLiteManager;
 import managers.SettingsManager;
 import threads.ThreadManager;
@@ -27,6 +28,7 @@ public class Runner {
     }
 
     private static void init() {
+        connectToFTP();
         readLocationsToMemory();
         readAssetsToMemory();
     }
@@ -51,5 +53,9 @@ public class Runner {
         SQLiteManager.getInstance().loadAssetsToDB(results);
 
         System.out.println("Done");
+    }
+
+    private static void connectToFTP() {
+        FTPManager.getInstance();
     }
 }

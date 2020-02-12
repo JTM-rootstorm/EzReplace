@@ -33,6 +33,12 @@ public class CSVManager {
     public List<List<String>> readLocationCSV() {
         String path = System.getProperty("user.dir") + File.separator + "locationcodes.csv";
 
+        File file = new File(path);
+
+        if (!file.exists()) {
+            FTPManager.getInstance().downloadFile("locationcodes.csv", path);
+        }
+
         return readCSV(path);
     }
 
