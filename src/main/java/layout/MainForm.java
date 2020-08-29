@@ -45,7 +45,7 @@ public class MainForm {
         JLabel techNote = new JLabel("Tech Notes:");
         JLabel request = new JLabel("Requesting:");
 
-        Font labelFont = new Font("Sans Sarif", Font.PLAIN, 12);
+        Font labelFont = new Font("Sans Serif", Font.PLAIN, 12);
 
         pane.add(locCode);
         pane.add(type);
